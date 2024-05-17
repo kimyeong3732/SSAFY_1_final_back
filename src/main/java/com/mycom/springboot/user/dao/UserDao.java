@@ -7,6 +7,4 @@ import com.mycom.springboot.user.dto.UserDto;
 @Mapper
 public interface UserDao {
 	int userRegister(UserDto userDto);
-	int userUpdate(UserDto userDto);
-	int userDrop(int userSeq);
 }
