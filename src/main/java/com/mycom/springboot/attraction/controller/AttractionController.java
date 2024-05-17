@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class SidoGugunCodeController {
+public class AttractionController {
 
 	private final AttractionService attractionService;
 	

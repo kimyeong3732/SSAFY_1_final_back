@@ -1,9 +1,10 @@
 package com.mycom.springboot.auth.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mycom.springboot.auth.dao.LoginDao;
-import com.mycom.springboot.auth.dto.LoginDto;
+import com.mycom.springboot.user.dto.UserDto;
 
 import lombok.AllArgsConstructor;
 
@@ -11,12 +12,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class LoginServiceImpl implements LoginService{
     
-	private final LoginDao loginDao;
-	
+	@Autowired
+    LoginDao loginDao;
+    
     @Override
-    public LoginDto login(LoginDto dto) {
+    public UserDto login(UserDto dto) {
         
-        LoginDto userDto = loginDao.login(dto.getUserEmail());
+    	UserDto userDto = loginDao.login(dto.getUserEmail());
         
         if( userDto != null && userDto.getUserPassword().equals(dto.getUserPassword())) {
             // password null setting

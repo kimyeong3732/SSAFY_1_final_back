@@ -1,7 +1,7 @@
 package com.mycom.springboot.auth.service;
 
-import com.mycom.springboot.auth.dto.LoginDto;
+import com.mycom.springboot.user.dto.UserDto;
 
 public interface LoginService {
-	LoginDto login(LoginDto dto);
+	UserDto login(UserDto dto);
 }

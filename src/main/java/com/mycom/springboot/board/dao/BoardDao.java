@@ -1,23 +1,44 @@
 package com.mycom.springboot.board.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.mycom.springboot.board.dto.BoardDto;
+import com.mycom.springboot.board.dto.BoardFileDto;
+import com.mycom.springboot.board.dto.BoardParamDto;
 
 @Mapper
 public interface BoardDao {
-	int boardInsert(BoardDto dto);
-	int boardUpdate(BoardDto dto);
-	int boardDelete(int boardId);
+	BoardDto boardDetail(BoardParamDto boardParamDto);
+	 List<BoardFileDto> boardDetailFileList(int boardId);
 
-	BoardDto boardDetail(int boardId);
+	// map - Dto
+	 int boardUserReadCount(BoardParamDto boardParamDto); 
 
-	List<BoardDto> boardList(Map<String, Object> params);
-	int boardListTotalCnt();
+	// map - @param
+	 int boardUserReadInsert(
+	        @Param("boardId") int boardId, 
+	        @Param("userSeq") int userSeq ); 
 
-	List<BoardDto> boardListSearchWord(int limit, int offset, String searchWord);
-	int boardListSearchWordTotalCnt(String searchWord);
+	 int boardReadCountUpdate(int boardId);
+
+
+	 int boardDelete(int boardId);    
+	 int boardFileDelete(int boardId);
+	 List<String> boardFileDeleteList(int boardId);
+	 int boardReadCountDelete(int boardId);
+
+	 int boardInsert(BoardDto dto);
+	 int boardFileInsert(BoardFileDto dto);
+
+	 List<BoardDto> boardList(BoardParamDto boardParamDto);
+	 int boardListTotalCount();
+
+	 List<BoardDto> boardListSearchWord(BoardParamDto boardParamDto);
+	 int boardListSearchWordTotalCount(BoardParamDto boardParamDto);
+
+
+	 int boardUpdate(BoardDto dto);
 }

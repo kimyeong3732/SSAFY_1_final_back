@@ -15,11 +15,14 @@ import lombok.ToString;
 @ToString
 
 public class UserDto {
-    private int userSeq;
-    private String userName;
-    private String userPassword;
-    private String userEmail;
-    private String userProfileImageUrl;
-    private Date userRegisterDate;
-   
+	private int userSeq;
+	private String userName;
+	private String userPassword;
+	private String userEmail;
+	private String userProfileImage;
+	private Date userRegisterDate;
+	
+	// 회원구분
+	private String userClsf;
+	private String userClsfName;
 }

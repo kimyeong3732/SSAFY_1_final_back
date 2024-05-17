@@ -3,9 +3,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
 <mapper namespace="com.mycom.springboot.auth.dao.LoginDao">
 	<!-- studentDao의 5개 메소드와 동일한 sql 작성 -->
-	<select id="login" parameterType="string" resultType="com.mycom.springboot.auth.dto.LoginDto">
-		select user_seq, user_name, user_password, user_email, user_profile_image_url
-		 from users
+	<select id="login" parameterType="String" resultType="com.mycom.springboot.user.dto.UserDto">
+		select user_seq, user_name, user_password, user_email, user_profile_image
+		  from users
 		 where user_email = #{userEmail}
 	</select>
 	

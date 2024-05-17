@@ -1,19 +1,19 @@
 package com.mycom.springboot.board.service;
 
-import java.util.List;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.mycom.springboot.board.dto.BoardDto;
+import com.mycom.springboot.board.dto.BoardParamDto;
+import com.mycom.springboot.board.dto.BoardResultDto;
 
 public interface BoardService {
-	int boardInsert(BoardDto dto);
-	int boardUpdate(BoardDto dto);
-	int boardDelete(int boardId);
+	BoardResultDto boardList(BoardParamDto boardParamDto);
+    BoardResultDto boardListSearchWord(BoardParamDto boardParamDto);
 
-	BoardDto boardDetail(int boardId, int userSeq);
+    BoardResultDto boardDetail(BoardParamDto boardParamDto);
 
-	List<BoardDto> boardList(int limit, int offset, String searchWord);
-	int boardListTotalCnt();
-
-	int boardListSearchWordTotalCnt(String searchWord);
+    BoardResultDto boardInsert(BoardDto dto, MultipartHttpServletRequest request);
+    BoardResultDto boardUpdate(BoardDto dto, MultipartHttpServletRequest request);
+    BoardResultDto boardDelete(int boardId);
 	
 }

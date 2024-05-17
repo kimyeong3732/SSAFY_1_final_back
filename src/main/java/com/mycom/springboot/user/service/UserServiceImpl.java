@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.mycom.springboot.user.dao.UserDao;
 import com.mycom.springboot.user.dto.UserDto;
+import com.mycom.springboot.user.dto.UserResultDto;
 
 import lombok.AllArgsConstructor;
 
@@ -11,20 +12,17 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService{
 	
-	private final UserDao userDao;
-
-	@Override
-	public int userRegister(UserDto userDto) {
-		return userDao.userRegister(userDto);
-	}
+private final UserDao userDao;
 	
-	public int userUpdate(UserDto userDto) {
-		return userDao.userUpdate(userDto);
-	}
-
 	@Override
-	public int userDrop(int userSeq) {
-		return userDao.userDrop(userSeq);
+	public UserResultDto userRegister(UserDto userDto) {
+		UserResultDto userResultDto = new UserResultDto();
+		if(userDao.userRegister(userDto) == 1) {
+			userResultDto.setResult("success");
+		}
+		else {
+			userResultDto.setResult("fail");
+		}
+		return userResultDto;
 	}
-
 }
