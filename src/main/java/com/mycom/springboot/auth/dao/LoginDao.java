@@ -2,9 +2,9 @@ package com.mycom.springboot.auth.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.mycom.springboot.auth.dto.LoginDto;
+import com.mycom.springboot.user.dto.UserDto;
 
 @Mapper
 public interface LoginDao {
-	LoginDto login(String userEmail);
+	UserDto login(String userEmail);
 }

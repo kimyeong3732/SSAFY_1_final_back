@@ -1,27 +1,18 @@
 package com.mycom.springboot.board.controller;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.mycom.springboot.auth.dto.LoginDto;
 import com.mycom.springboot.board.dto.BoardDto;
-import com.mycom.springboot.board.dto.BoardResponse;
+import com.mycom.springboot.board.dto.BoardParamDto;
+import com.mycom.springboot.board.dto.BoardResultDto;
 import com.mycom.springboot.board.service.BoardService;
+import com.mycom.springboot.user.dto.UserDto;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 
@@ -29,108 +20,70 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class BoardController {
 
-	private final BoardService boardService;
-
-	@GetMapping("/board/list")
-	public List<BoardDto> boardList(
-			@RequestParam("limit") int size,
-			@RequestParam("offset") int offset,
-			@RequestParam(name = "searchWord", required = false) String searchWord
-			) {
-		
-        List<BoardDto> boardList = boardService.boardList(size, offset, searchWord);
-        
-        if (!boardList.isEmpty()) {
-            return boardList;
-        } else {
-            return null;
-        }
-	}
+private final BoardService service;
 	
-	@GetMapping("/board/{boardId}")
-	public ResponseEntity<Map<String, String>> boardDetail(@PathVariable("boardId") int boardId, HttpServletRequest request) {
-		
-		HttpSession session = request.getSession();
-		LoginDto loginDto = (LoginDto) session.getAttribute("loginDto");
-		
-		Map<String, String> map = new HashMap<>();
-		
-		if (loginDto == null) {
-			map.put("result", "login");
-			return new ResponseEntity<Map<String, String>>(map, HttpStatus.BAD_REQUEST);
-		}
-		
-		BoardDto boardDto = boardService.boardDetail(boardId, loginDto.getUserSeq());
-		System.out.println("게시판 상세");
-		
-		map.put("result", "success");
-		map.put("boardId", Integer.toString(boardDto.getBoardId()));
-		map.put("userSeq", Integer.toString(boardDto.getUserSeq()));
-		map.put("userName", loginDto.getUserName());
-		map.put("title", boardDto.getTitle());
-		map.put("content", boardDto.getContent());
-		map.put("regDt", boardDto.getRegDt().toString());
-		
-		return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
-	}
-
-	@GetMapping("/board/boardListTotalCnt")
-	public int boardListTotalCnt() {
-		int totalCnt = boardService.boardListTotalCnt();
-        return totalCnt;
-	}
-
-	@PostMapping("/board/list")
-	public ResponseEntity<Map<String, String>> boardInsert(BoardDto boardDto) {
-		System.out.println("게시판 추가");
-		Map<String, String> map = new HashMap<>();
-
-		LocalDateTime now = LocalDateTime.now();
-        LocalDateTime date = LocalDateTime.from(now.atZone(ZoneId.systemDefault()).toInstant());
-        boardDto.setRegDt(date);
+    @GetMapping(value="/boards")
+    public BoardResultDto boardList(BoardParamDto boardParamDto){
         
-		int res = boardService.boardInsert(boardDto);
+        BoardResultDto boardResultDto;
 
-		if (res == 1) {
-			map.put("result", "success");
-			return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
-		}
+        if( boardParamDto.getSearchWord().isEmpty() ) {
+            boardResultDto = service.boardList(boardParamDto);
+        }else {
+            boardResultDto = service.boardListSearchWord(boardParamDto);
+        }
+        
+        return boardResultDto;
+    }
 
-		map.put("result", "fail");
-		return new ResponseEntity<Map<String, String>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+    
+    @GetMapping(value="/boards/{boardId}")
+    public BoardResultDto boardDetail(@PathVariable("boardId") int boardId, HttpSession session){
 
-	@DeleteMapping("/board/{boardId}")
-	public ResponseEntity<Map<String, String>> boardDelete(@PathVariable("boardId") int boardId) {
-		System.out.println("게시판 삭제");
-		Map<String, String> map = new HashMap<>();
+        BoardParamDto boardParamDto = new BoardParamDto();
+        boardParamDto.setUserSeq( ((UserDto) session.getAttribute("userDto")).getUserSeq());
+        boardParamDto.setBoardId(boardId);
 
-		int res = boardService.boardDelete(boardId);
+        BoardResultDto boardResultDto = service.boardDetail(boardParamDto);
+        // 게시글 작성자와 현 사용자가 동일
+        if( ((UserDto) session.getAttribute("userDto")).getUserSeq() == boardResultDto.getDto().getUserSeq() ) {
+            boardResultDto.getDto().setSameUser(true);
+        }                
+                
+        return boardResultDto;     
+    }
+    
+    @PostMapping(value="/boards")
+    public BoardResultDto boardInsert(
+            BoardDto boardDto, 
+            MultipartHttpServletRequest request) {
+        
+        boardDto.setUserSeq( ((UserDto) request.getSession().getAttribute("userDto")).getUserSeq());
+        BoardResultDto boardResultDto = service.boardInsert(boardDto, request);
+        
+        return boardResultDto;     
+    }
+    
+    // PUT + multipart/form-data (X)
+    // In RESTful,
+    // PUT & DELETE methods are defined to be idempotent
+    
+    @PostMapping(value="/boards/{boardId}") 
+    public BoardResultDto boardUpdate(
+            BoardDto boardDto, 
+            MultipartHttpServletRequest request){
+        boardDto.setUserSeq( ((UserDto) request.getSession().getAttribute("userDto")).getUserSeq());
+        BoardResultDto boardResultDto = service.boardUpdate(boardDto, request);
 
-		if (res == 1) {
-			map.put("result", "success");
-			return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
-		}
-
-		map.put("result", "fail");
-		return new ResponseEntity<Map<String, String>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-
-	@PutMapping("/board/{boardId}")
-	public ResponseEntity<Map<String, String>> boardUpdate(@PathVariable("boardId") int boardId, BoardDto boardDto) {
-		System.out.println("게시판 수정");
-		Map<String, String> map = new HashMap<>();
-
-		int res = boardService.boardUpdate(boardDto);
-
-		if (res == 1) {
-			map.put("result", "success");
-			return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
-		}
-
-		map.put("result", "fail");
-		return new ResponseEntity<Map<String, String>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+        return boardResultDto;        
+    }
+    
+    @DeleteMapping(value="/boards/{boardId}") 
+    public BoardResultDto boardDelete(@PathVariable(value="boardId") int boardId){
+        BoardResultDto boardResultDto = service.boardDelete(boardId);
+        
+        return boardResultDto;         
+    }
 
 	
 

@@ -2,34 +2,100 @@
 <!-- sql 작성 -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
 <mapper namespace="com.mycom.springboot.board.dao.BoardDao">
-	<!-- boardDao의 5개 메소드와 동일한 sql 작성 -->
-	<select id="boardList" parameterType="map" resultType="com.mycom.springboot.board.dto.BoardDto">
-		SELECT b.BOARD_ID, b.USER_SEQ, u.USER_NAME, u.USER_PROFILE_IMAGE_URL, b.TITLE, b.CONTENT, b.REG_DT, b.READ_COUNT
-        FROM BOARD b, USERS u
-        WHERE  b.USER_SEQ = u.USER_SEQ
-        limit #{limit}
-        offset #{offset}
-	</select>
-	
-	<select id="boardDetail" parameterType="int" resultType="com.mycom.springboot.board.dto.BoardDto">
-		select board_id, user_seq, title, content, reg_dt
-		 from board
-		 where board_id = #{boardId}
-	</select>
-	
-	<insert id="boardInsert" parameterType="com.mycom.springboot.board.dto.BoardDto">
-		insert into board(user_seq, title, content) values(#{userSeq}, #{title}, #{content});
-	</insert>
-	
-	<update id="boardUpdate" parameterType="com.mycom.springboot.board.dto.BoardDto">
-		update board
-		 set title = #{title},
-		 	 content = #{content}
-		 where board_id=#{boardId};
-	</update>
-	
-	<delete id="boardDelete" parameterType="int">
-		delete from board where board_id=#{boardId}
-	</delete>
-	
+<insert id="boardInsert" parameterType="com.mycom.springboot.board.dto.BoardDto" useGeneratedKeys="true" keyProperty="boardId">
+        insert into board ( user_seq, title, content, reg_dt, read_count )
+                    values ( #{userSeq}, #{title}, #{content}, now(), 0 )
+    </insert>
+    
+    <insert id="boardFileInsert" parameterType="com.mycom.springboot.board.dto.BoardFileDto">
+        insert into board_file ( board_id, file_name, file_size, file_content_type, file_uuid )
+                    values ( #{boardId}, #{fileName}, #{fileSize}, #{fileContentType}, #{fileUUID} )
+    </insert>
+    
+    <!-- reg_dt : LocalDateTime, check out BoardDto setter  -->
+    <select id="boardList" parameterType="map" resultType="com.mycom.springboot.board.dto.BoardDto">
+        select b.board_id, b.user_seq, u.user_name, u.user_profile_image,
+                 b.title, b.content, b.reg_dt, b.read_count
+          from board b, users u
+         where b.user_seq = u.user_seq
+         order by b.board_id desc
+         limit #{limit} offset #{offset}
+    </select>
+    
+    <select id="boardListTotalCount" resultType="int">
+        SELECT COUNT(*) FROM BOARD
+    </select>
+    
+    <select id="boardListSearchWord" parameterType="map" resultType="com.mycom.springboot.board.dto.BoardDto">
+        select b.board_id, b.user_seq, u.user_name, u.user_profile_image,
+                 b.title, b.content, b.reg_dt, b.read_count
+          from board b, users u
+          where b.user_seq = u.user_seq
+            and b.title like concat('%', #{searchWord} ,'%')
+          order by b.board_id desc
+          limit #{limit} offset #{offset}
+    </select>
+    
+    <select id="boardListSearchWordTotalCount" parameterType="string" resultType="int">
+        select count(*)
+          from board
+         where title like concat('%', #{searchWord} ,'%')
+    </select>
+    
+    <update id="boardUpdate" parameterType="com.mycom.springboot.board.dto.BoardDto">
+        update board
+           set title = #{title},
+           content   = #{content}
+         where board_id = #{boardId}
+    </update>
+    
+    <delete id="boardDelete" parameterType="int">
+        delete from board where board_id = #{boardId}
+    </delete>
+    
+    <delete id="boardFileDelete" parameterType="int">
+        delete from board_file where board_id = #{boardId}
+    </delete>
+    
+    <select id="boardFileDeleteList" parameterType="int" resultType="string">
+        select file_uuid from board_file where board_id = #{boardId}
+    </select>
+
+    <select id="boardDetail" parameterType="int" resultType="com.mycom.springboot.board.dto.BoardDto">
+        select b.board_id, b.user_seq, u.user_name, u.user_profile_image,
+               b.title, b.content, b.reg_dt, b.read_count
+          from board b, users u
+         where b.board_id = #{boardId}
+           AND b.USER_SEQ = u.USER_SEQ
+    </select>
+    
+    <select id="boardDetailFileList" parameterType="int" resultType="com.mycom.springboot.board.dto.BoardFileDto">
+        select board_id, file_id, file_name, file_size, file_content_type, 
+               file_uuid, reg_dt
+          from board_file
+         where board_id = #{boardId}
+    </select>
+    
+    <!-- Dao use Dto -->
+    <select id="boardUserReadCount" parameterType="map" resultType="int">
+        select count(*) from board_user_read 
+         where board_id = #{boardId} 
+           and user_seq = #{userSeq}
+    </select>
+    
+    <!-- Dao use @param -->
+    <insert id="boardUserReadInsert" parameterType="map">
+        insert into board_user_read ( board_id, user_seq )
+                    values ( #{boardId}, #{userSeq} )
+    </insert>
+    
+    <update id="boardReadCountUpdate" parameterType="int">
+        update board set read_count = read_count + 1
+         where board_id = #{boardId}
+    </update>
+    
+    <update id="boardReadCountDelete" parameterType="int">
+        delete from board_user_read where board_id = #{boardId}
+    </update>
+
 </mapper>
