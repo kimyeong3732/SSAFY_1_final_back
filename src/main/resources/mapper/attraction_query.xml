@@ -7,7 +7,7 @@
 		select * 
 		from attraction_info 
 		where sido_code = #{sidoCode} 
-	    and attraction_type_id = #{contentId}
+	    and attraction_type_id = #{attractionId}
 	    and title like CONCAT('%', #{word}, '%');
 	</select>
 	

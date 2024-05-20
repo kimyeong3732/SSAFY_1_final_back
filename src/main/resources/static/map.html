@@ -176,7 +176,7 @@
 	
     window.onload = async function(){
 
-        await getSidoList();
+        //await getSidoList();
 
         document.querySelector("#btnSearch").onclick = getList;
 
@@ -234,7 +234,7 @@
         makeList(data);
     }
     
-    async function getSidoList(){
+    /* async function getSidoList(){
         // spinner X - window.onload() 이미 적용
         let url = `/trip/sidoCode`;
 
@@ -248,7 +248,7 @@
         })
         document.querySelector("#sidoList").innerHTML = listHtml;
 
-    }
+    } */
     
     function makeOption(data) {
     	let areas = data.response.body.items.item;
@@ -281,7 +281,7 @@
         positions = [];
         trips.forEach((area) => {
         	tripList += `
-            	<tr onclick="moveCenter(${area.mapy}, ${area.mapx});">
+            	<tr onclick="moveCenter(${area.latitude}, ${area.longitude});">
 	              	<td><img src="${area.firstimage}" width="100px"></td>
 	              	<td>${area.title}</td>
 	              	<td>${area.addr1}</td>

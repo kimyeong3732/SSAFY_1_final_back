@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class AttractionDto {
 	private Integer sidoCode;
-	private Integer contentId;
+	private Integer attractionId;
 	private String word;
 	private Boolean chkSort;
 	private Double curLatitude;
