@@ -25,4 +25,5 @@ public class UserDto {
 	// 회원구분
 	private String userClsf;
 	private String userClsfName;
+	private String userMessage;
 }

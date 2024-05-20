@@ -30,12 +30,14 @@ public class LoginController {
         
         UserDto loginDto = service.login(dto);
         Map<String, String> map = new HashMap<>();
+        System.out.println(loginDto);
         if( loginDto != null ) {
             session.setAttribute("userDto", loginDto);
             
             map.put("result", "success");
             map.put("userName", loginDto.getUserName());
-            map.put("userProfileImage", userProgileImagePath + "/" + loginDto.getUserProfileImage());
+            map.put("userProfileImage", userProgileImagePath + loginDto.getUserProfileImage());
+            map.put("userRole", loginDto.getUserClsf());
             return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
         }
         map.put("result", "fail");
