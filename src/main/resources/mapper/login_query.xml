@@ -4,7 +4,7 @@
 <mapper namespace="com.mycom.springboot.auth.dao.LoginDao">
 	<!-- studentDao의 5개 메소드와 동일한 sql 작성 -->
 	<select id="login" parameterType="String" resultType="com.mycom.springboot.user.dto.UserDto">
-		select user_seq, user_name, user_password, user_email, user_profile_image
+		select user_seq, user_name, user_password, user_email, user_profile_image, user_clsf, user_message
 		  from users
 		 where user_email = #{userEmail}
 	</select>

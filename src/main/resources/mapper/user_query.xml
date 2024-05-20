@@ -4,7 +4,7 @@
 <mapper namespace="com.mycom.springboot.user.dao.UserDao">
 
     <insert id="userRegister" parameterType="com.mycom.springboot.user.dto.UserDto">
-        INSERT INTO board.users
+        INSERT INTO users
         (
         user_name, user_password, user_email, user_profile_image_url, user_register_date
         )
@@ -15,13 +15,13 @@
     </insert>
     
     <update id="userUpdate" parameterType="com.mycom.springboot.user.dto.UserDto">
-    	UPDATE board.users SET user_name = #{userName}, user_password = #{userPassword}, 
+    	UPDATE users SET user_name = #{userName}, user_password = #{userPassword}, 
     		user_profile_image_url = #{userProfileImageUrl}
     	WHERE user_seq = #{userSeq}
     </update>
 
 	<delete id="userDrop">
-		DELETE FROM board.users
+		DELETE FROM users
 		WHERE user_seq = #{userSeq}
 	</delete>
 
