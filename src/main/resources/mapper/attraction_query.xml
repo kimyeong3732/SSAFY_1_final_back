@@ -10,9 +10,4 @@
 	    and attraction_type_id = #{attractionId}
 	    and title like CONCAT('%', #{word}, '%');
 	</select>
-	
-	<select id="sidoCodeList" resultType="com.mycom.springboot.attraction.dto.SidoCodeDto">
-		select sido_code, sido_name 
-		from sido
-	</select>
 </mapper>

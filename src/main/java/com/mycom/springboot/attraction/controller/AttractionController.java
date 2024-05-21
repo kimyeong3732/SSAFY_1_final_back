@@ -33,7 +33,6 @@ public class AttractionController {
 	
 	@GetMapping(value="/attraction/search")
 	public ResponseEntity<ArrayList<SearchDto>> search(AttractionDto attractionDto){
-		log.info("???");
 //		log.info("attractioncode: {}", attractionDto.getCurLatitude());
 //		log.info("attractioncontent: {}", attractionDto.getCurLongitude());
 		 ArrayList<SearchDto> list = attractionService.search(attractionDto);
@@ -44,11 +43,6 @@ public class AttractionController {
 			 System.out.println(dto);
 		 }
 		 return ResponseEntity.ok(list);
-	}
-	
-	@GetMapping("/trip/sidoCode")
-	public ResponseEntity<List<SidoCodeDto>> sidoCodeList() {
-		return ResponseEntity.ok(attractionService.sidoCodeList());
 	}
 	
 }
