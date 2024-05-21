@@ -14,7 +14,7 @@
     
     <!-- reg_dt : LocalDateTime, check out BoardDto setter  -->
     <select id="boardList" parameterType="map" resultType="com.mycom.springboot.board.dto.BoardDto">
-        select b.board_id, b.user_seq, u.user_name, u.user_profile_image,
+        select b.board_id, b.user_seq, u.user_name,
                  b.title, b.content, b.reg_dt, b.read_count
           from board b, users u
          where b.user_seq = u.user_seq
@@ -27,7 +27,7 @@
     </select>
     
     <select id="boardListSearchWord" parameterType="map" resultType="com.mycom.springboot.board.dto.BoardDto">
-        select b.board_id, b.user_seq, u.user_name, u.user_profile_image,
+        select b.board_id, b.user_seq, u.user_name,
                  b.title, b.content, b.reg_dt, b.read_count
           from board b, users u
           where b.user_seq = u.user_seq
@@ -62,7 +62,7 @@
     </select>
 
     <select id="boardDetail" parameterType="int" resultType="com.mycom.springboot.board.dto.BoardDto">
-        select b.board_id, b.user_seq, u.user_name, u.user_profile_image,
+        select b.board_id, b.user_seq, u.user_name,
                b.title, b.content, b.reg_dt, b.read_count
           from board b, users u
          where b.board_id = #{boardId}
