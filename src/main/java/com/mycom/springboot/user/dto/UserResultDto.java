@@ -12,5 +12,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class UserResultDto {
+	private UserDto userDto;
 	private String result; // success, fail 등
 }

@@ -6,12 +6,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mycom.springboot.auth.service.LoginService;
 import com.mycom.springboot.user.dto.UserDto;
+import com.mycom.springboot.user.dto.UserResultDto;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -26,18 +28,35 @@ public class LoginController {
     String userProgileImagePath;
     
     @PostMapping(value="/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody UserDto dto, HttpSession session){
+    public UserResultDto login(@RequestBody UserDto dto, HttpSession session){
         
         UserDto loginDto = service.login(dto);
+        UserResultDto userResultDto = new UserResultDto();
+        if( loginDto != null ) {
+        	loginDto.setUserProfileImage(service.getImg(loginDto.getUserSeq()));
+            session.setAttribute("userDto", loginDto);
+            System.out.println(loginDto);
+            
+            
+            userResultDto.setUserDto(loginDto);
+            userResultDto.setResult("success");
+            
+            return userResultDto;
+        }
+        userResultDto.setResult("fail");
+        return userResultDto;
+    }
+    
+    @GetMapping(value="/logout")
+    public ResponseEntity<Map<String, String>> logout(HttpSession session){
+        
+        UserDto loginDto = (UserDto) session.getAttribute("userDto");
         Map<String, String> map = new HashMap<>();
         System.out.println(loginDto);
         if( loginDto != null ) {
-            session.setAttribute("userDto", loginDto);
+            session.removeAttribute("userDto");
             
             map.put("result", "success");
-            map.put("userName", loginDto.getUserName());
-            map.put("userProfileImage", userProgileImagePath + loginDto.getUserProfileImage());
-            map.put("userRole", loginDto.getUserClsf());
             return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
         }
         map.put("result", "fail");

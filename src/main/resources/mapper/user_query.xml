@@ -6,23 +6,45 @@
     <insert id="userRegister" parameterType="com.mycom.springboot.user.dto.UserDto">
         INSERT INTO users
         (
-        user_name, user_password, user_email, user_profile_image_url, user_register_date
+        user_name, user_password, user_email, user_register_date
         )
         VALUES
         (
-            #{userName}, #{userPassword}, #{userEmail}, '', now()
+            #{userName}, #{userPassword}, #{userEmail}, now()
+        )
+    </insert>
+    
+    <select id="getSeq" parameterType="com.mycom.springboot.user.dto.UserDto" resultType="int">
+        SELECT user_seq
+          FROM users
+         WHERE user_email = #{userEmail}
+    </select>
+    
+    <insert id="setImg" parameterType="int">
+        INSERT INTO user_file
+        (
+        user_seq
+        )
+        VALUES
+        (
+            #{userSeq}
         )
     </insert>
     
     <update id="userUpdate" parameterType="com.mycom.springboot.user.dto.UserDto">
     	UPDATE users SET user_name = #{userName}, user_password = #{userPassword}, 
-    		user_profile_image_url = #{userProfileImageUrl}
-    	WHERE user_seq = #{userSeq}
+    		user_message = #{userMessage}
+    	WHERE user_email = #{userEmail}
     </update>
 
-	<delete id="userDrop">
+	<delete id="userDelete">
 		DELETE FROM users
 		WHERE user_seq = #{userSeq}
 	</delete>
+	
+	<update id="updateImg" parameterType="com.mycom.springboot.user.dto.UserFileDto">
+        update user_file set file_name = #{fileName}, file_size = #{fileSize}, file_content_type = #{fileContentType}, file_uuid = #{fileUUID}
+         where user_seq = #{userSeq}
+    </update>
 
 </mapper>

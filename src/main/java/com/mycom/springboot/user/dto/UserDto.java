@@ -19,7 +19,7 @@ public class UserDto {
 	private String userName;
 	private String userPassword;
 	private String userEmail;
-	private String userProfileImage;
+	private UserFileDto userProfileImage;
 	private Date userRegisterDate;
 	
 	// 회원구분
