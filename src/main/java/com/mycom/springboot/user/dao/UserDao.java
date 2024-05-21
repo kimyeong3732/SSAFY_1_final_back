@@ -3,6 +3,7 @@ package com.mycom.springboot.user.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.mycom.springboot.user.dto.UserDto;
 import com.mycom.springboot.user.dto.UserFileDto;
@@ -25,4 +26,21 @@ public interface UserDao {
 	int deleteFriend(int userSeq);
 	int deleteUserFile(int userSeq);
 	int deleteUser(int userSeq);
+	List<Integer> getFriends(int userSeq);
+	UserDto getUser(int userSeq);
+	List<Integer> getRequest(int userSeq);
+	List<Integer> getRejected(int userSeq);
+	int deleteRequest(
+	        @Param("userSeq") int userSeq, 
+	        @Param("friendSeq") int friendSeq
+	        );
+	int addRequest(
+	        @Param("userSeq") int userSeq, 
+	        @Param("friendSeq") int friendSeq
+	        );
+	int updateRequest(
+	        @Param("userSeq") int userSeq, 
+	        @Param("friendSeq") int friendSeq,
+	        @Param("mode") String mode
+	        );
 }

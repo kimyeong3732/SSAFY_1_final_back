@@ -6,11 +6,11 @@
     <insert id="userRegister" parameterType="com.mycom.springboot.user.dto.UserDto">
         INSERT INTO users
         (
-        user_name, user_password, user_email, user_register_date
+        user_name, user_password, user_email, user_register_date, user_clsf, user_message
         )
         VALUES
         (
-            #{userName}, #{userPassword}, #{userEmail}, now()
+            #{userName}, #{userPassword}, #{userEmail}, now(), #{userClsf}, "Nothing there. Please edit your profile to put a message."
         )
     </insert>
     
@@ -102,5 +102,50 @@
     	delete from users
     	 where user_seq = #{userSeq}
     </delete>
+    
+    <select id="getFriends" parameterType="int" resultType="int">
+        SELECT friend_seq as user_seq
+          FROM friendship
+         WHERE user_seq = #{userSeq} and status = "accepted"
+         UNION
+        SELECT user_seq
+          FROM friendship
+         WHERE friend_seq = #{userSeq} and status = "accepted"
+    </select>
+    
+    <select id="getUser" parameterType="int" resultType="com.mycom.springboot.user.dto.UserDto">
+        SELECT user_name, user_message
+          FROM users
+         WHERE user_seq = #{userSeq}
+    </select>
+    
+    <select id="getRequest" parameterType="int" resultType="int">
+        SELECT user_seq
+          FROM friendship
+         WHERE friend_seq = #{userSeq} and status = "pending"
+    </select>
+    
+    <select id="getRejected" parameterType="int" resultType="int">
+        SELECT friend_seq
+          FROM friendship
+         WHERE user_seq = #{userSeq} and status = "rejected"
+    </select>
+    
+    <delete id="deleteRequest" parameterType="map">
+        delete from friendship
+         where (user_seq = #{userSeq} and friend_seq = #{friendSeq})
+            or (user_seq = #{friendSeq} and friend_seq = #{userSeq})
+    </delete>
+    
+    <insert id="addRequest" parameterType="map">
+        insert into friendship(user_seq, friend_seq, create_at, status)
+        values (#{userSeq}, #{friendSeq}, now(), "pending")
+    </insert>
+    
+    <update id="updateRequest" parameterType="map">
+        update friends SET status = #{mode}
+    	 where (user_seq = #{userSeq} and friend_seq = #{friendSeq})
+            or (user_seq = #{friendSeq} and friend_seq = #{userSeq})
+    </update>
 
 </mapper>
