@@ -20,14 +20,24 @@
          WHERE user_email = #{userEmail}
     </select>
     
+    <select id="getImg" parameterType="int" resultType="String">
+        SELECT file_uuid
+          FROM user_file
+         WHERE user_seq = #{userSeq}
+    </select>
+    
     <insert id="setImg" parameterType="int">
         INSERT INTO user_file
         (
-        user_seq
+        user_seq,
+        file_uuid,
+        file_name
         )
         VALUES
         (
-            #{userSeq}
+            #{userSeq},
+            "noProfile.png",
+            "noProfile.png"
         )
     </insert>
     
@@ -46,5 +56,51 @@
         update user_file set file_name = #{fileName}, file_size = #{fileSize}, file_content_type = #{fileContentType}, file_uuid = #{fileUUID}
          where user_seq = #{userSeq}
     </update>
+    
+    <select id="getUserBoard" parameterType="int" resultType="int">
+        SELECT board_id
+          FROM board
+         WHERE user_seq = #{userSeq}
+    </select>
+    
+    <delete id="deleteBoard" parameterType="int">
+    	delete from board
+    	 where user_seq = #{userSeq}
+    </delete>
+    
+    <delete id="deleteBoardFile" parameterType="int">
+    	delete from board_file
+    	 where board_id = #{boardId}
+    </delete>
+    
+    <delete id="deleteBoardUser" parameterType="int">
+    	delete from board_user_read
+    	 where user_seq = #{userSeq}
+    </delete>
+    
+    <delete id="deleteFavorite" parameterType="int">
+    	delete from favorite_place
+    	 where user_seq = #{userSeq}
+    </delete>
+    
+    <delete id="deletePrev" parameterType="int">
+    	delete from prev_place
+    	 where user_seq = #{userSeq}
+    </delete>
+    
+    <delete id="deleteFriend" parameterType="int">
+    	delete from friendship
+    	 where user_seq = #{userSeq} or friend_seq = #{userSeq}
+    </delete>
+    
+    <delete id="deleteUserFile" parameterType="int">
+    	delete from user_file
+    	 where user_seq = #{userSeq}
+    </delete>
+    
+    <delete id="deleteUser" parameterType="int">
+    	delete from users
+    	 where user_seq = #{userSeq}
+    </delete>
 
 </mapper>

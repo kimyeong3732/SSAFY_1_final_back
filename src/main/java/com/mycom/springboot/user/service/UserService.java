@@ -11,5 +11,5 @@ public interface UserService {
 	public UserResultDto userRegister(UserDto userDto);
 	public UserResultDto updateImg(UserFileDto userDto, MultipartHttpServletRequest request);
 	public UserResultDto userUpdate(UserDto userDto);
-	public UserResultDto userDelete(UserDto userDto);
+	public UserResultDto userDelete(String userEmail);
 }

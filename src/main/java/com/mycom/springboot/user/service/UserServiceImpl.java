@@ -1,6 +1,7 @@
 package com.mycom.springboot.user.service;
 
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.FilenameUtils;
@@ -56,9 +57,31 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserResultDto userDelete(UserDto userDto) {
-		// TODO Auto-generated method stub
-		return null;
+	public UserResultDto userDelete(String userEmail) {
+		UserDto userDto = new UserDto();
+		userDto.setUserEmail(userEmail);
+		
+		int userSeq = userDao.getSeq(userDto);
+		
+		UserResultDto userResultDto = new UserResultDto();
+		
+		List<Integer> boardIds = userDao.getUserBoard(userSeq);
+		
+		for(int boardId: boardIds) {
+			userDao.deleteBoardFile(boardId);
+		}
+		userDao.deleteBoardUser(userSeq);
+		userDao.deleteBoard(userSeq);
+		
+		userDao.deleteFavorite(userSeq);
+		userDao.deletePrev(userSeq);
+		userDao.deleteFriend(userSeq);
+		userDao.deleteUserFile(userSeq);
+		userDao.deleteUser(userSeq);
+		
+		userResultDto.setResult("success");
+		
+		return userResultDto;
 	}
 
 	@Override
@@ -74,6 +97,15 @@ public class UserServiceImpl implements UserService {
             if (!uploadDir.exists()) uploadDir.mkdir();
             
             int userSeq = userDto.getUserSeq();
+            
+            String img = userDao.getImg(userSeq);
+            
+            if(img!=null && !"noProfile.png".equals(img)) {
+            	File fileimg = new File(uploadPath + File.separator + img);
+                if(fileimg.exists()) {
+                	fileimg.delete();
+                }
+            }
             
             String fileName = file.getOriginalFilename();
             
