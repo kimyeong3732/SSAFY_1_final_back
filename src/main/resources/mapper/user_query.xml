@@ -113,6 +113,13 @@
          WHERE friend_seq = #{userSeq} and status = "accepted"
     </select>
     
+    <select id="searchUser" parameterType="map" resultType="com.mycom.springboot.user.dto.UserDto">
+        SELECT user_seq, user_name
+          FROM users
+         WHERE user_seq != #{userSeq}
+           and user_name like concat('%', #{str} ,'%')
+    </select>
+    
     <select id="getUser" parameterType="int" resultType="com.mycom.springboot.user.dto.UserDto">
         SELECT user_seq, user_name, user_message
           FROM users

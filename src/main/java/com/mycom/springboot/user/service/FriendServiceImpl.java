@@ -50,6 +50,24 @@ public class FriendServiceImpl implements FriendService {
 	}
 
 	@Override
+	public UserResultDto searchUser(int userSeq, String str) {
+		UserResultDto userResultDto = new UserResultDto();
+		
+		List<UserDto> users = userDao.searchUser(userSeq, str);
+		
+		if(users != null ) {
+			userResultDto.setList(users);
+			userResultDto.setResult("success");
+			
+			return userResultDto;
+		}
+		
+		userResultDto.setResult("fail");
+		
+		return userResultDto;
+	}
+
+	@Override
 	public UserResultDto getRequest(int userSeq) {
 		UserResultDto userResultDto = new UserResultDto();
 		

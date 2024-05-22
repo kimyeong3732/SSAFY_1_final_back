@@ -32,6 +32,15 @@ public class FriendController {
 		return userResultDto;
 	}
 	
+	@GetMapping("/friends/user")
+	public UserResultDto searchUser(@RequestBody HashMap<String, String> data, HttpSession session) {
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		
+		UserResultDto userResultDto = friendService.searchUser(userDto.getUserSeq(), data.get("str"));
+		
+		return userResultDto;
+	}
+	
 	@GetMapping("/friends/request")
 	public UserResultDto getRequest(HttpSession session) {
 		UserDto userDto = (UserDto) session.getAttribute("userDto");

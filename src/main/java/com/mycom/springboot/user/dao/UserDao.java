@@ -27,6 +27,10 @@ public interface UserDao {
 	int deleteUserFile(int userSeq);
 	int deleteUser(int userSeq);
 	List<Integer> getFriends(int userSeq);
+	List<UserDto> searchUser(
+	        @Param("userSeq") int userSeq, 
+	        @Param("str") String str
+	        );
 	UserDto getUser(int userSeq);
 	List<Integer> getRequest(int userSeq);
 	List<Integer> getRejected(int userSeq);
