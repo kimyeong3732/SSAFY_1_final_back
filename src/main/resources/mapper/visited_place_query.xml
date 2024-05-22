@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mycom.springboot.visited_place.dao.VisitedPlaceDao">
+    <insert id="addVisitedPlace" parameterType="com.mycom.springboot.visited_place.dto.VisitedPlaceDto">
+        INSERT INTO visited_place (user_seq, attraction_id)
+        VALUES (#{userSeq}, #{attractionId})
+    </insert>
+
+    <!-- <delete id="removeVisitedPlace">
+        DELETE FROM Visited_place
+        WHERE visited_place_id = #{visitedPlaceId}
+    </delete> -->
+
+    <select id="getVisitedPlacesByUser" parameterType="int" resultType="com.mycom.springboot.attraction.dto.SearchDto">
+        SELECT first_image, title,  addr1, latitude, longitude 
+        FROM visited_place v,  attraction_info a 
+        WHERE user_seq = #{userSeq} 
+        AND v.attraction_id = a.attraction_id
+    </select>
+
+    <select id="existsByUserSeqAndContentId" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM visited_place
+        WHERE user_seq = #{userSeq} AND attraction_id = #{attractionId}
+    </select>
+</mapper>

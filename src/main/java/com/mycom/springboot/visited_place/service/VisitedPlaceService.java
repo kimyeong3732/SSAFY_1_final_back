@@ -1,4 +1,4 @@
-package com.mycom.springboot.favorite_place.service;
+package com.mycom.springboot.visited_place.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,10 +6,10 @@ import java.util.List;
 import com.mycom.springboot.attraction.dto.SearchDto;
 import com.mycom.springboot.favorite_place.dto.FavoritePlaceDto;
 
-public interface FavoritePlaceService {
+public interface VisitedPlaceService {
 
-	void addFavoritePlace(int userSeq, int attractionId);
+	void addVisitedPlace(int userSeq, int attractionId);
 //	void removeFavoritePlace(int favoritePlaceId);
-	ArrayList<SearchDto> getFavoritePlacesByUser(int userSeq);
+	ArrayList<SearchDto> getVisitedPlacesByUser(int userSeq);
     
 }
