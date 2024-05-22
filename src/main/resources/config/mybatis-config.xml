@@ -14,5 +14,6 @@
         <mapper resource="mapper/user_query.xml" /> 
         <mapper resource="mapper/attraction_query.xml" />
         <mapper resource="mapper/favorite_place_query.xml" />
+        <mapper resource="mapper/visited_place_query.xml" />
     </mappers>
 </configuration>

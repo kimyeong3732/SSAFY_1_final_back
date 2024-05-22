@@ -28,10 +28,10 @@ public class FavoritePlaceServiceImpl implements FavoritePlaceService{
         favoritePlaceDao.addFavoritePlace(favoritePlaceDto);
     }
     
-    @Override
-    public void removeFavoritePlace(int favoritePlaceId) {
-        favoritePlaceDao.removeFavoritePlace(favoritePlaceId);
-    }
+//    @Override
+//    public void removeFavoritePlace(int favoritePlaceId) {
+//        favoritePlaceDao.removeFavoritePlace(favoritePlaceId);
+//    }
 
     @Override
     public ArrayList<SearchDto> getFavoritePlacesByUser(int userSeq) {

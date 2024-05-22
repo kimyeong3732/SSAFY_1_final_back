@@ -7,10 +7,10 @@
         VALUES (#{userSeq}, #{attractionId})
     </insert>
 
-    <delete id="removeFavoritePlace">
+    <!-- <delete id="removeFavoritePlace">
         DELETE FROM favorite_place
         WHERE favorite_place_id = #{favoritePlaceId}
-    </delete>
+    </delete> -->
 
     <select id="getFavoritePlacesByUser" parameterType="int" resultType="com.mycom.springboot.attraction.dto.SearchDto">
         SELECT first_image, title,  addr1, latitude, longitude 

@@ -1,4 +1,4 @@
-package com.mycom.springboot.favorite_place.dto;
+package com.mycom.springboot.visited_place.dto;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class FavoritePlaceDto {
+public class VisitedPlaceDto {
     private int userSeq;
     private int attractionId;
 }
