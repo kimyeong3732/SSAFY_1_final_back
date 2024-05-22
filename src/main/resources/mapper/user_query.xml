@@ -114,7 +114,7 @@
     </select>
     
     <select id="getUser" parameterType="int" resultType="com.mycom.springboot.user.dto.UserDto">
-        SELECT user_name, user_message
+        SELECT user_seq, user_name, user_message
           FROM users
          WHERE user_seq = #{userSeq}
     </select>
@@ -141,6 +141,13 @@
         insert into friendship(user_seq, friend_seq, create_at, status)
         values (#{userSeq}, #{friendSeq}, now(), "pending")
     </insert>
+    
+    <select id="getRequestUseFriend" parameterType="map" resultType="int">
+        SELECT friendship_id
+          FROM friendship
+         WHERE (user_seq = #{userSeq} and friend_seq = #{friendSeq})
+            or (user_seq = #{friendSeq} and friend_seq = #{userSeq})
+    </select>
     
     <update id="updateRequest" parameterType="map">
         update friends SET status = #{mode}

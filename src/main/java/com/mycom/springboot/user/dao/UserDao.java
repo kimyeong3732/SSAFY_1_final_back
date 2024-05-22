@@ -38,6 +38,10 @@ public interface UserDao {
 	        @Param("userSeq") int userSeq, 
 	        @Param("friendSeq") int friendSeq
 	        );
+	List<Integer> getRequestUseFriend(
+	        @Param("userSeq") int userSeq, 
+	        @Param("friendSeq") int friendSeq
+	        );
 	int updateRequest(
 	        @Param("userSeq") int userSeq, 
 	        @Param("friendSeq") int friendSeq,

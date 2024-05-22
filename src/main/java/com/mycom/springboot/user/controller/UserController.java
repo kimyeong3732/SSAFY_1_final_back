@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.mycom.springboot.board.dto.BoardDto;
-import com.mycom.springboot.board.dto.BoardResultDto;
 import com.mycom.springboot.user.dto.UserDto;
 import com.mycom.springboot.user.dto.UserFileDto;
 import com.mycom.springboot.user.dto.UserResultDto;
