@@ -50,32 +50,121 @@ public class FriendServiceImpl implements FriendService {
 	}
 
 	@Override
+	public UserResultDto searchUser(int userSeq, String str) {
+		UserResultDto userResultDto = new UserResultDto();
+		
+		List<UserDto> users = userDao.searchUser(userSeq, str);
+		
+		if(users != null ) {
+			userResultDto.setList(users);
+			userResultDto.setResult("success");
+			
+			return userResultDto;
+		}
+		
+		userResultDto.setResult("fail");
+		
+		return userResultDto;
+	}
+
+	@Override
 	public UserResultDto getRequest(int userSeq) {
-		// TODO Auto-generated method stub
-		return null;
+		UserResultDto userResultDto = new UserResultDto();
+		
+		List<Integer> requests = userDao.getRequest(userSeq);
+		
+		if(requests != null) {
+			List<UserDto> list = new ArrayList<>();
+			
+			for(int request: requests) {
+				UserDto user = userDao.getUser(request);
+				
+				list.add(user);
+			}
+			
+			userResultDto.setList(list);
+			
+			userResultDto.setResult("success");
+			
+			return userResultDto;
+		}
+		
+		userResultDto.setResult("fail");
+		
+		return userResultDto;
 	}
 
 	@Override
 	public UserResultDto getRejected(int userSeq) {
-		// TODO Auto-generated method stub
-		return null;
+		UserResultDto userResultDto = new UserResultDto();
+		
+		List<Integer> rejects = userDao.getRequest(userSeq);
+		
+		if(rejects != null) {
+			List<UserDto> list = new ArrayList<>();
+			
+			for(int reject: rejects) {
+				UserDto user = userDao.getUser(reject);
+				
+				list.add(user);
+			}
+			
+			userResultDto.setList(list);
+			
+			userResultDto.setResult("success");
+			
+			return userResultDto;
+		}
+		
+		userResultDto.setResult("fail");
+		
+		return userResultDto;
 	}
 
 	@Override
 	public UserResultDto deleteFriend(int userSeq, int friendSeq) {
-		// TODO Auto-generated method stub
-		return null;
+		UserResultDto userResultDto = new UserResultDto();
+		
+		if(userDao.deleteRequest(userSeq, friendSeq) == 1) {
+			userResultDto.setResult("success");
+			
+			return userResultDto;
+		}
+		
+		userResultDto.setResult("fail");
+		
+		return userResultDto;
 	}
 
 	@Override
 	public UserResultDto addRequest(int userSeq, int friendSeq) {
-		// TODO Auto-generated method stub
-		return null;
+		UserResultDto userResultDto = new UserResultDto();
+		
+		List<Integer> requests = userDao.getRequestUseFriend(userSeq, friendSeq);
+		
+		if(requests == null && userDao.addRequest(userSeq, friendSeq) == 1) {
+			userResultDto.setResult("success");
+			
+			return userResultDto;
+		}
+		
+		userResultDto.setResult("fail");
+		
+		return userResultDto;
 	}
 
 	@Override
 	public UserResultDto updateRequest(int userSeq, int friendSeq, int mode) {
-		// TODO Auto-generated method stub
-		return null;
+		UserResultDto userResultDto = new UserResultDto();
+		
+		if(userDao.updateRequest(userSeq, friendSeq, mode==0?"rejected":"accepted") == 1) {
+			userResultDto.setResult("success");
+			
+			return userResultDto;
+		}
+		
+		userResultDto.setResult("fail");
+		
+		return userResultDto;
 	}
 }

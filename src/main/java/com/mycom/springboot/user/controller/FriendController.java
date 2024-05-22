@@ -1,24 +1,18 @@
 package com.mycom.springboot.user.controller;
 
 import java.util.HashMap;
-import java.util.Map;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.mycom.springboot.board.dto.BoardDto;
-import com.mycom.springboot.board.dto.BoardResultDto;
 import com.mycom.springboot.user.dto.UserDto;
-import com.mycom.springboot.user.dto.UserFileDto;
 import com.mycom.springboot.user.dto.UserResultDto;
-import com.mycom.springboot.user.service.UserService;
+import com.mycom.springboot.user.service.FriendService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -27,47 +21,67 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class FriendController {
 	
-private final UserService userService;
+	private final FriendService friendService;
 	
-	public ResponseEntity<Map<String, String>> register(@RequestBody UserDto dto) {
-		UserResultDto userResultDto = userService.userRegister(dto);
-		Map<String, String> map = new HashMap<>();
-		if("success".equals(userResultDto.getResult())) {
-			map.put("result", "success");
-			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
-		}
-		else {
-			map.put("result", "fail");
-			return new ResponseEntity<Map<String,String>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	@GetMapping("/friends")
+	public UserResultDto friendList(HttpSession session) {
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		
+		UserResultDto userResultDto = friendService.friendList(userDto.getUserSeq());
+		
+		return userResultDto;
 	}
 	
-	public ResponseEntity<Map<String, String>> updateUser(@RequestBody UserDto dto, HttpSession session) {
-		UserResultDto userResultDto = userService.userUpdate(dto);
-		Map<String, String> map = new HashMap<>();
-		if("success".equals(userResultDto.getResult())) {
-			map.put("result", "success");
-			session.setAttribute("userDto", dto);
-			return new ResponseEntity<Map<String,String>>(map, HttpStatus.OK);
-		}
-		else {
-			map.put("result", "fail");
-			return new ResponseEntity<Map<String,String>>(map, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	@GetMapping("/friends/user")
+	public UserResultDto searchUser(@RequestBody HashMap<String, String> data, HttpSession session) {
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		
+		UserResultDto userResultDto = friendService.searchUser(userDto.getUserSeq(), data.get("str"));
+		
+		return userResultDto;
 	}
 	
-    public UserResultDto updateImg(
-            MultipartHttpServletRequest request) {
-        
-		UserFileDto userDto = new UserFileDto();
-		userDto.setUserSeq( ((UserDto) request.getSession().getAttribute("userDto")).getUserSeq());
-		UserResultDto userResultDto = userService.updateImg(userDto, request);
-        
-        return userResultDto;     
-    }
+	@GetMapping("/friends/request")
+	public UserResultDto getRequest(HttpSession session) {
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		
+		UserResultDto userResultDto = friendService.getRequest(userDto.getUserSeq());
+		
+		return userResultDto;
+	}
 	
-	public UserResultDto UserDelete(@PathVariable("userEmail") String userEmail) {
-		UserResultDto userResultDto = userService.userDelete(userEmail);
+	@GetMapping("/friends/reject")
+	public UserResultDto getRejected(HttpSession session) {
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		
+		UserResultDto userResultDto = friendService.getRejected(userDto.getUserSeq());
+		
+		return userResultDto;
+	}
+	
+	@DeleteMapping("/friends/{friendSeq}")
+	public UserResultDto deleteFriend(@PathVariable("friendSeq") int friendSeq, HttpSession session) {
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		
+		UserResultDto userResultDto = friendService.deleteFriend(userDto.getUserSeq(), friendSeq);
+		
+		return userResultDto;
+	}
+	
+	@PostMapping("/friends")
+	public UserResultDto addRequest(@RequestBody HashMap<String, Integer> data, HttpSession session) {
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		
+		UserResultDto userResultDto = friendService.addRequest(userDto.getUserSeq(), data.get("friendSeq"));
+		
+		return userResultDto;
+	}
+	
+	@PutMapping("/friends/{friendSeq}")
+	public UserResultDto updateRequest(@PathVariable("friendSeq") int friendSeq, @RequestBody HashMap<String, Integer> data, HttpSession session) {
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		
+		UserResultDto userResultDto = friendService.updateRequest(userDto.getUserSeq(), friendSeq, data.get("mode"));
 		
 		return userResultDto;
 	}
