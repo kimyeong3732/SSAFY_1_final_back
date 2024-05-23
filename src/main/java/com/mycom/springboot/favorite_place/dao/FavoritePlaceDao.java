@@ -9,8 +9,8 @@ import com.mycom.springboot.favorite_place.dto.FavoritePlaceDto;
 
 @Mapper
 public interface FavoritePlaceDao {
-    void addFavoritePlace(FavoritePlaceDto favoritePlaceDto);
-    void removeFavoritePlace(int favoritePlaceId);
+    int addFavoritePlace(FavoritePlaceDto favoritePlaceDto);
+    int deleteFavoritePlace(FavoritePlaceDto favoritePlaceDto);
     ArrayList<SearchDto> getFavoritePlacesByUser(int userSeq);
-    boolean existsByUserSeqAndContentId(int userSeq, int attractionId);
+    boolean existsByUserSeqAndContentId(FavoritePlaceDto favoritePlaceDto);
 }

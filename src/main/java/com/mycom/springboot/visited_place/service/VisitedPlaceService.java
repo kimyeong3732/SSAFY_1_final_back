@@ -1,15 +1,15 @@
 package com.mycom.springboot.visited_place.service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.mycom.springboot.attraction.dto.SearchDto;
-import com.mycom.springboot.favorite_place.dto.FavoritePlaceDto;
+import com.mycom.springboot.visited_place.dto.VisitedPlaceDto;
+import com.mycom.springboot.visited_place.dto.VisitedResultDto;
 
 public interface VisitedPlaceService {
 
-	void addVisitedPlace(int userSeq, int attractionId);
-//	void removeFavoritePlace(int favoritePlaceId);
+	VisitedResultDto addVisitedPlace(VisitedPlaceDto visitedPlaceDto);
+	VisitedResultDto deleteVisitedPlace(VisitedPlaceDto visitedPlaceDto);
 	ArrayList<SearchDto> getVisitedPlacesByUser(int userSeq);
     
 }

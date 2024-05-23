@@ -12,6 +12,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class SearchDto {
+	private int attractionId;
 	private String title;
 	private String addr1;
 	private String firstimage;
