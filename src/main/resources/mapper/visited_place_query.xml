@@ -7,19 +7,20 @@
         VALUES (#{userSeq}, #{attractionId})
     </insert>
 
-    <!-- <delete id="removeVisitedPlace">
-        DELETE FROM Visited_place
-        WHERE visited_place_id = #{visitedPlaceId}
-    </delete> -->
+    <delete id="deleteVisitedPlace" parameterType="com.mycom.springboot.visited_place.dto.VisitedPlaceDto">
+        DELETE FROM visited_place
+        WHERE user_seq = #{userSeq}
+        AND attraction_id = #{attractionId}
+    </delete>
 
     <select id="getVisitedPlacesByUser" parameterType="int" resultType="com.mycom.springboot.attraction.dto.SearchDto">
-        SELECT first_image, title,  addr1, latitude, longitude 
+        SELECT v.attraction_id, first_image, title,  addr1, latitude, longitude 
         FROM visited_place v,  attraction_info a 
         WHERE user_seq = #{userSeq} 
         AND v.attraction_id = a.attraction_id
     </select>
 
-    <select id="existsByUserSeqAndContentId" resultType="boolean">
+    <select id="existsByUserSeqAndContentId" parameterType="com.mycom.springboot.visited_place.dto.VisitedPlaceDto" resultType="boolean">
         SELECT COUNT(*) > 0
         FROM visited_place
         WHERE user_seq = #{userSeq} AND attraction_id = #{attractionId}

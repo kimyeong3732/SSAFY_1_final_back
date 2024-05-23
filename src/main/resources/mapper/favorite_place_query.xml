@@ -7,19 +7,20 @@
         VALUES (#{userSeq}, #{attractionId})
     </insert>
 
-    <!-- <delete id="removeFavoritePlace">
+    <delete id="deleteFavoritePlace" parameterType="com.mycom.springboot.favorite_place.dto.FavoritePlaceDto">
         DELETE FROM favorite_place
-        WHERE favorite_place_id = #{favoritePlaceId}
-    </delete> -->
+        WHERE user_seq = #{userSeq}
+        AND attraction_id = #{attractionId}
+    </delete>
 
     <select id="getFavoritePlacesByUser" parameterType="int" resultType="com.mycom.springboot.attraction.dto.SearchDto">
-        SELECT first_image, title,  addr1, latitude, longitude 
+        SELECT f.attraction_id, first_image, title,  addr1, latitude, longitude 
         FROM favorite_place f,  attraction_info a 
         WHERE user_seq = #{userSeq} 
         AND f.attraction_id = a.attraction_id
     </select>
 
-    <select id="existsByUserSeqAndContentId" resultType="boolean">
+    <select id="existsByUserSeqAndContentId" parameterType="com.mycom.springboot.favorite_place.dto.FavoritePlaceDto" resultType="boolean">
         SELECT COUNT(*) > 0
         FROM favorite_place
         WHERE user_seq = #{userSeq} AND attraction_id = #{attractionId}

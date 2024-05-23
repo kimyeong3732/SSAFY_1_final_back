@@ -9,8 +9,8 @@ import com.mycom.springboot.visited_place.dto.VisitedPlaceDto;
 
 @Mapper
 public interface VisitedPlaceDao {
-    void addVisitedPlace(VisitedPlaceDto visitedPlaceDto);
-    void removeVisitedPlace(int visitedPlaceId);
+	int addVisitedPlace(VisitedPlaceDto visitedPlaceDto);
+	int deleteVisitedPlace(VisitedPlaceDto visitedPlaceDto);
     ArrayList<SearchDto> getVisitedPlacesByUser(int userSeq);
-    boolean existsByUserSeqAndContentId(int userSeq, int attractionId);
+    boolean existsByUserSeqAndContentId(VisitedPlaceDto visitedPlaceDto);
 }
