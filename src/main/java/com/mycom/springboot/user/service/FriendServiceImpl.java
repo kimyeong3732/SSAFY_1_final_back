@@ -95,10 +95,37 @@ public class FriendServiceImpl implements FriendService {
 	}
 
 	@Override
+	public UserResultDto getNotRejected(int userSeq) {
+		UserResultDto userResultDto = new UserResultDto();
+		
+		List<Integer> notRejects = userDao.getNotRejected(userSeq);
+		
+		if(notRejects != null) {
+			List<UserDto> list = new ArrayList<>();
+			
+			for(int notReject: notRejects) {
+				UserDto user = userDao.getUser(notReject);
+				
+				list.add(user);
+			}
+			
+			userResultDto.setList(list);
+			
+			userResultDto.setResult("success");
+			
+			return userResultDto;
+		}
+		
+		userResultDto.setResult("fail");
+		
+		return userResultDto;
+	}
+
+	@Override
 	public UserResultDto getRejected(int userSeq) {
 		UserResultDto userResultDto = new UserResultDto();
 		
-		List<Integer> rejects = userDao.getRequest(userSeq);
+		List<Integer> rejects = userDao.getRejected(userSeq);
 		
 		if(rejects != null) {
 			List<UserDto> list = new ArrayList<>();
@@ -142,7 +169,7 @@ public class FriendServiceImpl implements FriendService {
 		
 		List<Integer> requests = userDao.getRequestUseFriend(userSeq, friendSeq);
 		
-		if(requests == null && userDao.addRequest(userSeq, friendSeq) == 1) {
+		if(requests.isEmpty() && userDao.addRequest(userSeq, friendSeq) == 1) {
 			userResultDto.setResult("success");
 			
 			return userResultDto;

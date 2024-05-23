@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mycom.springboot.user.dto.UserDto;
@@ -33,7 +34,7 @@ public class FriendController {
 	}
 	
 	@GetMapping("/friends/user")
-	public UserResultDto searchUser(@RequestBody HashMap<String, String> data, HttpSession session) {
+	public UserResultDto searchUser(@RequestParam HashMap<String, String> data, HttpSession session) {
 		UserDto userDto = (UserDto) session.getAttribute("userDto");
 		
 		UserResultDto userResultDto = friendService.searchUser(userDto.getUserSeq(), data.get("str"));
@@ -46,6 +47,15 @@ public class FriendController {
 		UserDto userDto = (UserDto) session.getAttribute("userDto");
 		
 		UserResultDto userResultDto = friendService.getRequest(userDto.getUserSeq());
+		
+		return userResultDto;
+	}
+	
+	@GetMapping("/friends/notreject")
+	public UserResultDto getNotRejected(HttpSession session) {
+		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		
+		UserResultDto userResultDto = friendService.getNotRejected(userDto.getUserSeq());
 		
 		return userResultDto;
 	}

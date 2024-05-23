@@ -118,6 +118,15 @@
           FROM users
          WHERE user_seq != #{userSeq}
            and user_name like concat('%', #{str} ,'%')
+           and user_seq not in (
+           						select friend_seq as user_seq
+           						  from friendship
+           						 where user_seq = #{userSeq}
+           						 union
+           						select user_seq
+           						  from friendship
+           						 where friend_seq = #{userSeq}
+           					   )
     </select>
     
     <select id="getUser" parameterType="int" resultType="com.mycom.springboot.user.dto.UserDto">
@@ -130,6 +139,12 @@
         SELECT user_seq
           FROM friendship
          WHERE friend_seq = #{userSeq} and status = "pending"
+    </select>
+    
+    <select id="getNotRejected" parameterType="int" resultType="int">
+        SELECT friend_seq
+          FROM friendship
+         WHERE user_seq = #{userSeq} and status = "pending"
     </select>
     
     <select id="getRejected" parameterType="int" resultType="int">
@@ -157,7 +172,7 @@
     </select>
     
     <update id="updateRequest" parameterType="map">
-        update friends SET status = #{mode}
+        update friendship SET status = #{mode}
     	 where (user_seq = #{userSeq} and friend_seq = #{friendSeq})
             or (user_seq = #{friendSeq} and friend_seq = #{userSeq})
     </update>

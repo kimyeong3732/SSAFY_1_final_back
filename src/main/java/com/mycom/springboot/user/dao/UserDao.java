@@ -33,6 +33,7 @@ public interface UserDao {
 	        );
 	UserDto getUser(int userSeq);
 	List<Integer> getRequest(int userSeq);
+	List<Integer> getNotRejected(int userSeq);
 	List<Integer> getRejected(int userSeq);
 	int deleteRequest(
 	        @Param("userSeq") int userSeq, 

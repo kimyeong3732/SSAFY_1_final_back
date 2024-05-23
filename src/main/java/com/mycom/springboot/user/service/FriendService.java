@@ -6,6 +6,7 @@ public interface FriendService {
 	UserResultDto friendList(int userSeq);
 	UserResultDto searchUser(int userSeq, String str);
 	UserResultDto getRequest(int userSeq);
+	UserResultDto getNotRejected(int userSeq);
 	UserResultDto getRejected(int userSeq);
 	UserResultDto deleteFriend(int userSeq, int friendSeq);
 	UserResultDto addRequest(int userSeq, int friendSeq);
